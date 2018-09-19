@@ -1,5 +1,7 @@
 
-! Fichier Exercice_VLAN_ListAcces_ReseauB_Alpha.txt
+! Auteur   Martin Dubois, ing.
+! Produit  Enseignement_Cisco
+! Fichier  Exercice_VLAN_ListAcces/ReseauB_Alpha.txt
 
 enable
   configure terminal

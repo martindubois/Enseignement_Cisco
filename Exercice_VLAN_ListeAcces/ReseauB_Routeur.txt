@@ -1,5 +1,7 @@
 
-! Fichier  Exercice_VLAN_ListeAcces_ReseauB_Routeur.txt
+! Auteur   Martin Dubois, ing.
+! Produit  Enseignement_Cisco
+! Fichier  Exercice_VLAN_ListeAcces/ReseauB_Routeur.txt
 
 enable
   configure terminal

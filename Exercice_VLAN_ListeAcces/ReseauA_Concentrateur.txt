@@ -1,5 +1,7 @@
 
-! Fichier  Exercice_VLAN_ListeAcces_ReseaA_Concentrateur.txt
+! Auteur   Martin Dubois, ing.
+! Produit  Enseignement_Cisco
+! Fichier  Exercice_VLAN_ListeAcces/ReseaA_Concentrateur.txt
 
 enable
   configure terminal

@@ -1,5 +1,7 @@
 
-! Fichier  Exercice_VLAN_ListAcces_ReseauB_Bravo.txt
+! Auteur   Martin Dubois, ing.
+! Produit  Enseignement_Cisco
+! Fichier  Exercice_VLAN_ListAcces/ReseauB_Bravo.txt
 
 enable
   configure terminal

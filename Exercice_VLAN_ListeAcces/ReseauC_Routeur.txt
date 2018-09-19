@@ -1,0 +1,41 @@
+
+! Auteur   Martin Dubois, ing.
+! Produit  Enseignement_Cisco
+! Fichier  Exercice_VLAN_ListeAcces/ReseauC_Routeur.txt
+
+enable
+  configure terminal
+    ip access-list extended 101
+      permit ip 192.168.20.0 0.0.0.255 any
+      permit ip 192.168.25.0 0.0.0.255 any
+      permit udp any host 192.168.10.10 eq 53
+      permit tcp any host 192.168.10.10 eq 80
+    exit
+    ip access-list extended 102
+      permit ip 192.168.20.0 0.0.0.255 any
+      permit ip 192.168.25.0 0.0.0.255 any
+      permit tcp any any established
+      permit udp host 192.168.10.10 eq 53 any
+    exit
+    interface f0/1
+      no shutdown
+    ! Question 1
+    interface f0/1.2
+      ip address 192.168.30.1 255.255.255.0
+      no shutdown
+    interface f0/2
+      no shutdown
+    interface f0/2.1
+      ip address 192.168.10.1 255.255.255.0
+      ! Question 9
+    ! Question 10
+    interface f0/2.3
+      encapsulation dot1q 20
+      ip access-group 102 out
+      ip address 192.168.25.1 255.255.255.0
+    exit
+    ! Question 11
+  exit
+  copy running-config startup-config
+
+exit

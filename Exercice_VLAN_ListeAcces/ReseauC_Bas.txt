@@ -1,0 +1,27 @@
+
+! Auteur   Martin Dubois, ing.
+! Produit  Enseignement_Cisco
+! Fichier  Exercice_VLAN_ListeAcces/ReseauC_Bas.txt
+
+enable
+  configure terminal
+    vlan 10
+      name Serveur
+    ! Question 1
+    exit
+    interface f0/1C
+      ! Question 2
+      switchport access vlan 10
+    interface f0/2
+      ! Question 3
+      switchport access vlan 30
+    ! Question 4
+    interface range f0/4 – f0/23
+      no switchport mode
+      shutdown
+    ! Question 5
+    exit
+  exit
+  copy running-config startup-config
+
+exit

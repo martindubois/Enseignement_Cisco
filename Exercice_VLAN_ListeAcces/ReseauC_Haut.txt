@@ -1,0 +1,25 @@
+
+! Auteur   Martin Dubois, ing.
+! Produit  Enseignement_Cisco
+! Fichier  Exercice_VLAN_ListeAcces/ReseauC_Haut.txt
+
+enable
+  configure terminal
+    vlan 20
+      name Fondateurs
+    ! Question 1
+    exit
+    ! Question 2
+    interface range f0/3 f0/23
+      no switchport mode
+      shutdown
+    interface f0/24
+      no switchport trunk allowed vlan
+      switchport mode trunk
+      switchport trunk allowed vlan 20, 30
+    exit
+  exit
+  copy running-config startup-config
+
+exit
+
