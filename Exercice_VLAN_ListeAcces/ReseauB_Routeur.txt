@@ -1,0 +1,20 @@
+
+! Fichier  Exercice_VLAN_ListeAcces_ReseauB_Routeur.txt
+
+enable
+  configure terminal
+    interface f0/1
+      no shutdown
+    interface f0/1.1
+      encapsulation dot1q 10
+      ip address 192.168.10.1 255.255.255.0
+    interface f0/1.2
+      encapsulation dot1q 20
+      ip address 192.168.20.1 255.255.255.0
+    exit
+    ip routing
+  exit
+  copy running-config startup-config
+
+exit
+

@@ -1,0 +1,37 @@
+
+! Fichier  Exercice_VLAN_ListeAcces_ReseaA_Concentrateur.txt
+
+enable
+  configure terminal
+    vlan 10
+      name V10
+    vlan 20
+      name V20
+    vlan 30
+      name V30
+    vlan 40
+      name V40
+    exit
+    interface f0/1
+      no shutdown
+      switchport mode access
+      switchport access vlan 10
+    interface f0/2
+      no shutdown
+      switchport mode trunk
+      switchport trunk allowed vlan all
+    interface f0/3
+      no shutdown
+      switchport mode access
+      switchport access vlan 30
+    interface f0/4
+      no shutdown
+      switchport mode access
+      switchport access vlan 40
+    interface range f0/5 - f0/24
+      shutdown
+    exit
+  exit
+  copy running-config startup-config
+
+exit
