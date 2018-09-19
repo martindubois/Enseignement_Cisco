@@ -10,7 +10,7 @@ enable
     ! Question 1
     exit
     ! Question 2
-    interface range f0/3 f0/23
+    interface range f0/4 - f0/23
       no switchport mode
       shutdown
     interface f0/24
