@@ -17,19 +17,21 @@ enable
       permit tcp any any established
       permit udp host 192.168.10.10 eq 53 any
     exit
-    interface f0/1
+    interface f0/0
       no shutdown
     ! Question 1
-    interface f0/1.2
+    interface f0/0.2
+      encapsulation dot1q 30
       ip address 192.168.30.1 255.255.255.0
       no shutdown
-    interface f0/2
+    interface f0/1
       no shutdown
-    interface f0/2.1
+    interface f0/1.1
       ip address 192.168.10.1 255.255.255.0
       ! Question 2
     ! Question 3
-    interface f0/2.3
+    interface f0/1.3
+      no shutdown
       encapsulation dot1q 20
       ip access-group 102 out
       ip address 192.168.25.1 255.255.255.0
