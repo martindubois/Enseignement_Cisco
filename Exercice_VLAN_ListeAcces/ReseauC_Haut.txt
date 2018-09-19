@@ -14,9 +14,10 @@ enable
       no switchport mode
       shutdown
     interface f0/24
+      no shutdown
       no switchport trunk allowed vlan
       switchport mode trunk
-      switchport trunk allowed vlan 20, 30
+      switchport trunk allowed vlan 20,30
     exit
   exit
   copy running-config startup-config

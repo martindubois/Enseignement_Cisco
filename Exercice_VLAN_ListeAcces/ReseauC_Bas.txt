@@ -9,7 +9,7 @@ enable
       name Serveur
     ! Question 1
     exit
-    interface f0/1C
+    interface f0/1
       ! Question 2
       switchport access vlan 10
     interface f0/2

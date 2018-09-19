@@ -27,14 +27,14 @@ enable
       no shutdown
     interface f0/2.1
       ip address 192.168.10.1 255.255.255.0
-      ! Question 9
-    ! Question 10
+      ! Question 2
+    ! Question 3
     interface f0/2.3
       encapsulation dot1q 20
       ip access-group 102 out
       ip address 192.168.25.1 255.255.255.0
     exit
-    ! Question 11
+    ! Question 4
   exit
   copy running-config startup-config
 
