@@ -1,0 +1,64 @@
+
+! Auteur   Martin Dubois, ing.
+! Fichier  Exercice_VLAN_ListeAcces/ReseauD_Routeur.txt
+
+enable
+  configure terminal
+
+    ! ===== Solution =====
+    ip access-list extended 110
+      ! Permettre les réponse du service DNS
+      permit udp host 192.168.20.10 eq 53 any
+      ! Permettre le retour des connexions TCP
+      permit tcp any any established
+    ip access-list extended 120
+      ! Permettre a tous d'utiliser le service DNS
+      permit udp any host 192.168.20.10 eq 53
+      ! Permettre a tous le monde d'utiliser le site WEB
+      permit tcp any host 192.168.20.10 eq 80
+      ! Permettre au enseignant d'envoyer des courriel
+      permit tcp 192.168.10.0 0.0.0.255 host 192.168.20.10 eq 25
+      ! Permettre au enseignant de recevoir des courriel
+      permit tcp 192.168.10.0 0.0.0.255 host 192.168.20.10 eq 110
+    exit
+
+    interface f0/0
+      no shutdown
+    interface f0/0.1
+      no shutdown
+      encapsulation dot1q 10
+
+      ! ===== Solution =====
+      ip access-group 110 out
+
+      ip address 192.168.10.1 255.255.255.0
+    interface f0/0.2
+      no shutdown
+      encapsulation dot1q 20
+
+      ! ===== Solution =====
+      ip access-group 120 out
+
+      ip address 192.168.20.1 255.255.255.0
+    interface f0/1
+      no shutdown
+      ip address 192.168.30.1 255.255.255.0
+    exit
+    ip dhcp pool PoolEnseignants
+      no default-router
+      no dns-server
+      default-router 192.168.10.1
+      dns-server 192.168.20.10
+      network 192.168.10.0 255.255.255.0
+    ip dhcp pool PoolEtudiants
+      no default-router
+      no dns-server
+      default-router 192.168.30.1
+      dns-server 192.168.20.10
+      network 192.168.30.0 255.255.255.0
+    exit
+    ip routing
+  exit
+  copy running-config startup-config
+
+exit

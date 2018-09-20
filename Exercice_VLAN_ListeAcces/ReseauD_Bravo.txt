@@ -1,0 +1,14 @@
+
+! Auteur   Martin Dubois, ing.
+! Fichier  Exercice_VLAN_ListeAcces/ReseauD_Bravo.txt
+
+enable
+  configure terminal
+    interface range f0/1 - f0/24
+      no shutdown
+      no switchport mode
+    exit
+  exit
+  copy running-config startup-config
+
+exit

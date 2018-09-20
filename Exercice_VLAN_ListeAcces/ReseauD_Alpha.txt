@@ -1,0 +1,28 @@
+
+! Auteur   Martin Dubois, ing.
+! Fichier  Exercice_VLAN_ListeAcces/ReseauD_Alpha.txt
+
+enable
+  vlan 10
+    name Enseignants
+  vlan 20
+    name Informatique
+  exit
+  configure terminal
+    interface range f0/1 - f0/21
+      no shutdown
+      switchport mode access
+      switchport access vlan 10
+    interface range f0/22 - f0/23
+      no shutdown
+      switchport mode access
+      switchport access vlan 20
+    interface range f0/24
+      no shutdown
+      switchport mode trunk
+      switchport trunk allowed vlan all
+    exit
+  exit
+  copy running-config startup-config
+
+exit
