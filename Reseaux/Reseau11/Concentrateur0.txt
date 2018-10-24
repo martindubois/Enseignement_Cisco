@@ -1,0 +1,33 @@
+
+! Auteur   Martin Dubois, ing.
+! Fichier  Reseau11/Concentrateur0.txt
+
+enable
+  configure terminal
+    vlan 10
+      name CD
+    vlan 20
+      name AB
+    exit
+    vtp domain Reseau11
+    vtp mode server
+    vtp version 2
+    interface f0/1
+      no shutdown
+      switchport mode trunk
+      switchport trunk allowed vlan 10,20
+    interface f0/2
+      no shutdown
+      switchport mode trunk
+      switchport trunk allowed vlan 10,20
+    interface f0/3
+      no shutdown
+      switchport mode access
+      switchport access vlan 20
+    interface range f0/4 - 24
+      no shutdown
+    exit
+  exit
+  copy running-config startup-config
+
+exit
