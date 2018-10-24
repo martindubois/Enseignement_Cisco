@@ -1,0 +1,16 @@
+
+! Autheur  Martin Dubois, ing.
+! Produit  Enseignement/Cisco
+! Fichier  Exercice_NAT/R_EXT.txt
+
+enable
+  configure terminal
+    interface f0/0
+      no shutdown
+      ip address 207.125.32.1 255.255.255.0
+    exit
+    ip routing
+  exit
+  copy running-config startup-config
+
+exit

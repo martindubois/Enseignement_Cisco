@@ -1,0 +1,31 @@
+
+! Auteur   Martin Dubois, ing.
+! Produit  Enseignement/Cisco
+! Fichier  Exercice_NAT/S_ROOT.txt
+
+enable
+  configure terminal
+    vlan 11
+      name Utilisateurs
+    vlan 12
+      name Serveurs
+    exit
+    interface f0/1
+      no shutdown
+      switchport mode trunk
+      switchport trunk allowed vlan all
+    interface range f0/2 - 3
+      no shutdown
+      switchport mode access
+      switchport access vlan 11
+    interface f0/4
+      no shutdown
+      switchport mode access
+      switchport access vlan 12
+    interface range f0/5 - 24
+      shutdown
+    exit
+  exit
+  copy running-config startup-config
+
+exit
