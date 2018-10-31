@@ -1,0 +1,31 @@
+
+! Auteur   Martin Dubois, ing.
+! Produit  Enseignement/Cisco
+! Fichier  Integrations/Integration1/Concentrateur_Charles.txt
+
+enable
+  configure terminal
+    vlan 50
+      name Bob_Serveur
+    vlan 60
+      name Bob
+    exit
+    interface f0/1
+      no shutdown
+      switchport mode trunk
+      switchport trunk allowed vlan 50,60
+    interface f0/2
+      no shutdown
+      switchport mode access
+      switchport access vlan 50
+    interface f0/3
+      no shutdown
+      switchport mode access
+      switchport access vlan 60
+    interface range f0/4 - 24
+      shutdown
+    exit
+  exit
+  copy running-config startup-config
+
+exit
