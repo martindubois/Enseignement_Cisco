@@ -1,0 +1,16 @@
+
+! Auteur   Martin Dubois, ing.
+! Produit  Enseignement/Cisco
+! Fichier  Reseaux/Reseau13/Concentrateur1.txt
+
+enable
+  configure terminal
+    interface range f0/1 - 3
+      no shutdown
+    interface range f0/4 - 24
+      shutdown
+    exit
+  exit
+  copy running-config startup-config
+
+exit

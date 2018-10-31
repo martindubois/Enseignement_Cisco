@@ -1,0 +1,31 @@
+
+! Auteur   Martin Dubois, ing.
+! Produit  Enseignement/Cisco
+! Fichier  Reseaux/Reseau13/Concentrateur0.txt
+
+enable
+  configure terminal
+    vlan 10
+      name A
+    vlan 30
+      name B
+    exit
+    interface f0/1
+      no shutdown
+      switchport mode trunk
+      switchport trunk allowed vlan 10,30
+    interface f0/2
+      no shutdown
+      switchport mode access
+      switchport access vlan 10
+    interface f0/3
+      no shutdown
+      switchport mode access
+      switchport access vlan 30
+    interface range f0/4 - 24
+      shutdown
+    exit
+  exit
+  copy running-config startup-config
+
+exit
