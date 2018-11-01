@@ -6,9 +6,9 @@
 enable
   configure terminal
     vlan 50
-      name Bob_Serveur
+      name Charles_Serveur
     vlan 60
-      name Bob
+      name Charles
     exit
     interface f0/1
       no shutdown

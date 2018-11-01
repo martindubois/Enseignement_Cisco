@@ -25,7 +25,7 @@ enable
     interface f0/0.2
       no shutdown
       encapsulation dot1q 60
-      ip access-group 105 in
+      ip access-group 105 out
       ip address 192.168.60.1 255.255.255.0
     interface f0/1
       no shutdown
