@@ -4,22 +4,26 @@
 ! Fichier  Reseaux/Reseau08/Concentrateur.txt
 
 enable
-  configure terminal
-    vlan 10
-      name VLAN10
-    vlan 20
-      name VLAN20
+    configure terminal
+        vlan 10
+            name VLAN10
+        vlan 20
+            name VLAN20
+        exit
+        interface range fa0/1 - fa0/2
+            switchport access vlan 10
+            no shutdown
+        interface range fa0/3 - fa0/4
+            switchport access vlan 20
+            no shutdown
+        interface range fa0/5 - fa0/23
+            shutdown
+        interface fa0/24
+            switchport trunk encapsulation dot1q
+            switchport mode trunk
+            switchport trunk allowed vlan 10,20
+        exit
     exit
-    interface range fa0/1 - fa0/2
-      switchport access vlan 10 
-      no shutdown
-    interface range fa0/3 - fa0/4
-      switchport access vlan 20
-      no shutdown
-    interface range fa0/5 - fa0/6
-      shutdown
-    exit
-  exit
-  copy running-config startup-config
+    copy running-config startup-config
 
 exit
