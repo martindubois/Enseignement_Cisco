@@ -1,0 +1,31 @@
+
+! Auteur   Martin Dubois, ing.
+! Produit  Enseignement/Cisco
+! Fichier  ExempleComplet/Concentrateur0.txt
+
+enable
+    configure terminal
+        vlan 10
+            name Serveurs
+        vlan 20
+            name Admins
+        exit
+        interface range f0/1-4
+            no shutdown
+            switchport mode access
+            switchport access vlan 20
+        interface range f0/5-15
+            shutdown
+        interface range f0/16-17
+            no shutdown
+            switchport mode access
+            switchport access vlan 10
+        interface range f0/18-23
+            shutdown
+        interface f0/24
+            no shutdown
+            switchport mode trunk
+            switchport trunk allowed vlan 10,20
+        exit
+    exit
+exit

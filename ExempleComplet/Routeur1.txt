@@ -1,0 +1,77 @@
+
+! Auteur   Martin Dubois, ing.
+! Produit  Enseignement/Cisco
+! Fichier  ExempleComplet/Routeur1.txt
+
+enable
+    configure terminal
+
+        ! Access list
+        no ip access-list extended 100
+        no ip access-list extended 121
+        no ip access-list extended 130
+        ip access-list extended 100
+            ! En in sur l'interface externe - Il ne faut pas utiliser les adresses privees dans cette liste.
+            ! Reponse TCP vers les ordinateurs qui visitent Internet
+            permit tcp any any established
+        ip access-list extended 121
+            ! En out sur l'interface connecte au sous-reseau des administrateurs
+        ip access-list extended 130
+            ! En out sur l'interface connecte au sous-reseau de la production
+        exit
+
+        interface f0/0
+            no shutdown
+            ip address 8.1.0.1 255.0.0.0
+            ip nat outside
+        interface f0/1
+            no shutdown
+        interface f0/1.1
+            no shutdown
+            encapsulation dot1q 21
+            ip address 192.168.21.1
+            ip nat inside
+        interface f0/1.2
+            no shutdown
+            encapsulation dot1q 30
+            ip address 192.168.30.1
+            ip nat inside
+        interface tunel 0
+            ip address 192.168.40.2
+            tunnel destination 8.0.0.1
+            tunnel source f0/0
+            tunnel mode gre ip
+        exit
+
+        ! DHCP
+        no ip dhcp pool Admins
+        no ip dhcp pool Prods
+        ip dhcp pool Admins
+            no default-router
+            no dns-server
+            default router 192.168.21.1
+            dns-server 192.168.10.10
+            network 192.168.21.0 255.255.255.0
+        ip dhcp pool Prods
+            no default-router
+            no dns-server
+            default router 192.168.30.1
+            dns-server 192.168.10.10
+            network 192.168.30.0 255.255.255.0
+        exit
+        ip dhcp excluded-address 192.168.21.1
+
+        ! NAT
+        no access-list 1
+        access-list 1 permit 192.168.21.0 0.0.0.255
+        access-list 1 permit 192.168.30.0 0.0.0.255
+        ip nat pool NAT 8.1.0.1 8.1.0.1 netmask 255.0.0.0
+        ip nat inside source list 1 pool NAT overload
+
+        ! Routes
+        ip route 192.168.10.0 255.255.255.0 192.168.40.1
+        ip route 192.168.20.0 255.255.255.0 192.168.40.1
+
+        ip routing
+    exit
+exit
