@@ -12,16 +12,31 @@ enable
         no ip access-list extended 130
         ip access-list extended 100
             ! En in sur l'interface externe - Il ne faut pas utiliser les adresses privees dans cette liste.
+            ! Communication pour le tunnel
+            ! EXPLICATION  Cette ligne semble tres permissive mais elle
+            !              identifie tres precisement l'autre routeur et les
+            !              listes d'access des sous interface (en out) sont
+            !              tres restrictives.
+            permit ip host 8.0.0.1 host 8.1.0.1
             ! Reponse TCP vers les ordinateurs qui visitent Internet
             permit tcp any any established
         ip access-list extended 121
             ! En out sur l'interface connecte au sous-reseau des administrateurs
+            ! Reponse TCP des serveurs ou d'Internet
+            permit TCP any 192.168.21.0 0.0.0.255 established
+            ! Reponse DNS du serveur DNS de l'entreprise
+            permit UDP host 192.168.10.10 eq 53 192.168.21.0 0.0.0.255
         ip access-list extended 130
             ! En out sur l'interface connecte au sous-reseau de la production
+            ! Reponse TCP des serveurs ou d'Internet
+            permit TCP any 192.168.30.0 0.0.0.255 established
+            ! Reponse DNS du serveur DNS de l'entreprise
+            permit UDP host 192.168.10.10 eq 53 192.168.30.0 0.0.0.255
         exit
 
         interface f0/0
             no shutdown
+            ip access-group 100 in
             ip address 8.1.0.1 255.0.0.0
             ip nat outside
         interface f0/1
@@ -29,15 +44,17 @@ enable
         interface f0/1.1
             no shutdown
             encapsulation dot1q 21
-            ip address 192.168.21.1
+            ip access-group 121 out
+            ip address 192.168.21.1 255.255.255.0
             ip nat inside
         interface f0/1.2
             no shutdown
             encapsulation dot1q 30
-            ip address 192.168.30.1
+            ip access-group 130 out
+            ip address 192.168.30.1 255.255.255.0
             ip nat inside
-        interface tunel 0
-            ip address 192.168.40.2
+        interface tunnel 0
+            ip address 192.168.40.2 255.255.255.0
             tunnel destination 8.0.0.1
             tunnel source f0/0
             tunnel mode gre ip
@@ -49,13 +66,13 @@ enable
         ip dhcp pool Admins
             no default-router
             no dns-server
-            default router 192.168.21.1
+            default-router 192.168.21.1
             dns-server 192.168.10.10
             network 192.168.21.0 255.255.255.0
         ip dhcp pool Prods
             no default-router
             no dns-server
-            default router 192.168.30.1
+            default-router 192.168.30.1
             dns-server 192.168.10.10
             network 192.168.30.0 255.255.255.0
         exit

@@ -12,33 +12,68 @@ enable
         no ip access-list extended 120
         ip access-list extended 100
             ! En in sur l'interface externe - Il ne faut pas utiliser les adresses privees dans cette liste.
-            ! Reponse DNS vers le serveur DNS.
-            permit udp host 8.8.8.8 eq 53 any
+            ! Communication pour le tunnel
+            ! EXPLICATION  Cette ligne semble tres permissive mais elle
+            !              identifie tres precisement l'autre routeur et les
+            !              listes d'access des sous interface (en out) sont
+            !              tres restrictives.
+            permit ip host 8.1.0.1 host 8.0.0.1
             ! Reponse TCP vers les ordinateurs qui visitent Internet
             permit tcp any any established
+            ! Reponse DNS vers le serveur DNS.
+            ! EXPLICATION  Cette ligne permet les reponses DNS arrivant du
+            !              serveur DNS de google vers tout les ordinateurs.
+            !              C'est ainsi car, au niveau de cet interface, les
+            !              adresse interne n'existe pas. Il est donc
+            !              impossible de ne permettre que les reponses
+            !              dirigees vers le serveur DNS interne. Se dont les
+            !              les listes des sous-interface interne qui
+            !              bloquerons les reponses qui ne seront pas dirigées
+            !              vers le serveur DNS interne.
+            permit udp host 8.8.8.8 eq 53 any
         ip access-list extended 110
             ! En out sur l'interface connecte au sous-reseau des serveurs
+            ! Requetes SMTP, HTTP et POP3 des administrateurs du coté 0
             permit tcp 192.168.20.0 0.0.0.255 host 192.168.10.10 eq 25
             permit tcp 192.168.20.0 0.0.0.255 host 192.168.10.10 eq 80
             permit tcp 192.168.20.0 0.0.0.255 host 192.168.10.10 eq 110
             permit tcp 192.168.20.0 0.0.0.255 host 192.168.10.20 eq 80
+            ! Requetes SMTP, HTTP et POP3 des administrateurs du coté 1
             permit tcp 192.168.21.0 0.0.0.255 host 192.168.10.10 eq 25
             permit tcp 192.168.21.0 0.0.0.255 host 192.168.10.10 eq 80
             permit tcp 192.168.21.0 0.0.0.255 host 192.168.10.10 eq 110
             permit tcp 192.168.21.0 0.0.0.255 host 192.168.10.20 eq 80
+            ! Requetes SMTP, HTTP et POP3 des employés de production
             permit tcp 192.168.30.0 0.0.0.255 host 192.168.10.10 eq 25
             permit tcp 192.168.30.0 0.0.0.255 host 192.168.10.10 eq 80
             permit tcp 192.168.30.0 0.0.0.255 host 192.168.10.10 eq 110
+            ! Requete DNS des administrateurs du coté 0
             permit udp 192.168.20.0 0.0.0.255 host 192.168.10.10 eq 53
+            ! Requete DNS des administrateurs du cote 1
             permit udp 192.168.21.0 0.0.0.255 host 192.168.10.10 eq 53
+            ! Requete DNS des employé de production
             permit udp 192.168.30.0 0.0.0.255 host 192.168.10.10 eq 53
+            ! Reponse DNS du serveur DNS de google
+            ! EXPLICATION  Le serveur DNS doit être en mesure de rediriger
+            !              les requetes pour lesquelle il ne connait pas les
+            !              reponses vers le serveur DNS de google.
             permit udp host 8.8.8.8 eq 53 host 192.168.10.10
         ip access-list extended 120
             ! En out sur l'interface connecte au sous-reseau des administrateurs
+            ! Reponse TCP des serveurs ou d'Internet
+            ! EXPLICATION  Que l'utilisateur navigue sur Internet ou sur un
+            !              des serveurs internes, pour cette liste, c'est
+            !              exactement la même chose. C'est la liste sur l'autre
+            !              sous interface qui s'occupera de permettre ou non
+            !              l'access aux serveurs internes.
+            permit TCP any 192.168.20.0 0.0.0.255 established
+            ! Reponse DNS du serveur DNS de l'entreprise
+            permit UDP host 192.168.10.10 eq 53 192.168.20.0 0.0.0.255
         exit
 
         interface f0/0
             no shutdown
+            ip access-group 100 in
             ip address 8.0.0.1 255.0.0.0
             ip nat outside
         interface f0/1
@@ -46,14 +81,17 @@ enable
         interface f0/1.1
             no shutdown
             encapsulation dot1q 10
-            ip address 192.168.10.1
+            ip access-group 110 out
+            ip address 192.168.10.1 255.255.255.0
+            ip nat inside
         interface f0/1.2
             no shutdown
             encapsulation dot1q 20
-            ip address 192.168.20.1
+            ip access-group 120 out
+            ip address 192.168.20.1 255.255.255.0
             ip nat inside
-        interface tunel 0
-            ip address 192.168.40.1
+        interface tunnel 0
+            ip address 192.168.40.1 255.255.255.0
             tunnel destination 8.1.0.1
             tunnel source f0/0
             tunnel mode gre ip
@@ -64,7 +102,7 @@ enable
         ip dhcp pool Admins
             no default-router
             no dns-server
-            default router 192.168.20.1
+            default-router 192.168.20.1
             dns-server 192.168.10.10
             network 192.168.20.0 255.255.255.0
         exit
@@ -73,6 +111,9 @@ enable
         ! NAT
         no access-list 1
         access-list 1 permit 192.168.20.0 0.0.0.255
+        ! EXPLICATION  Le serveur principal doit utiliser le NAT pour envoyer
+        !              des requetes DNS au serveur de google.
+        access-list 1 permit host 192.168.10.10
         ip nat pool NAT 8.0.0.1 8.0.0.1 netmask 255.0.0.0
         ip nat inside source list 1 pool NAT overload
 
